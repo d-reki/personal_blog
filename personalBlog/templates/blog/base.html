@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+{% load staticfiles %}
+{% load simple_tag %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href=" {% static 'blog/css/bulma.css' %}">
+    <link rel="stylesheet" href="{% static 'blog/css/style.css' %}">
+    
+    <link rel="stylesheet" href="{% static 'blog/css/bottomstyle.css' %}">
+    <link rel="stylesheet" href="{% static 'blog/css/bootstrap.min.css' %}">
+    <script src="{% static 'blog/js/jquery.min.js' %}"></script>
+    <script src="{% static 'blog/js/script.js' %}"></script>
+    <link rel="stylesheet" href="{% static 'blog/css/hddb.css' %}">
+    <link rel="stylesheet" href="{% static 'blog/css/font-awesome.min.css' %}">
+    {% block head %}
+    <title>博客首页</title>
+    {% endblock head %}
+</head>
+<body>
+  
+<!-- 博客导航栏 -->
+  <header class="container menu-header">
+    <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+      　　<div class="container">　　<!-- container让导航条居中container-fluid让导航条自适应 -->　　
+      　　　　<div class="navbar-header">
+      　　　　　　 <!-- 代表响应式布局：当浏览器宽度小于某个值时导航栏折叠变成三道杠 -->
+                  <button class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" type="button">
+                      <span class="sr-only navbar-left">切换导航</span>
+                      <span class="icon-bar navbar-left"></span>
+                      <span class="icon-bar navbar-left"></span>
+                      <span class="icon-bar navbar-left"></span>
+                  </button>
+             <!-- //代表导航栏左侧logo或者图标  -->   
+      　　　　 　　<!-- <a class="navbar-brand" href="http://www.baidu.com">浏览器博物馆</a> -->
+                  <span class="navbar-brand">
+                    <a href="{% url 'blog:index' %}"><img class="logo2" src="{% static 'blog/images/logo.png' %}" /></a>
+                  </span>
+              </div>
+      　　　　<!-- //导航条内容，为了响应式布局，点击三道杠弹出导航栏 -->
+              <div>           
+      　　　　　　　　<!-- //代表导航栏中的项目 -->
+      　　　　　　 <ul class="nav navbar-nav collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                      <li><a href="{% url 'blog:index' %}"><span class="glyphicon glyphicon-home"></span>首页</a></li>
+                      <li><a href="{% url 'account:person_add_article' %}"><span class="glyphicon glyphicon-pencil"></span>写博客</a></li>
+                      <li><a href="{% url 'account:person' %}"><span class="glyphicon glyphicon-user"></span>个人中心</a></li>
+                  </ul>
+                  <!-- 搜索框 -->
+                  <form class="navbar-form navbar-left" role="search" action="{% url 'blog:search' %}">
+                    {% csrf_token %}
+                 <div class="form-group">
+                    <input type="text" class="form-control" placeholder="搜索文章">
+                    <button type="submit" class="btn btn-default">搜索</button>
+                 </div>
+                 
+               </form>
+              </div>
+          </div>
+      </nav>
+   
+  </header>
+  
+<!-- 博客导航栏  end-->
+
+
+<!-- 博客section模块 -->
+<div class="container">
+  <section class="section has-background-light">
+    <div class="columns">
+
+      <!-- 博客左边内容模块 -->
+      <div class="column is-8">
+        {% block content %}
+        {% endblock content %}      
+      </div>
+      <!-- 博客左边内容模块 -->
+
+      <!-- 博客右侧列表模块 -->
+      <div class="column is-4">  
+          {% block aside %}
+
+        <!-- 文章标签 -->
+        {% get_tags_list as tags %}
+        <div class="box is-shadowless2 is-radiusless">
+          <h1 class="is-size-5 title">类别归档</h1>
+          {% if tags %}
+          {% for tag in tags %}
+          <a href="{% url 'blog:tags' tag.id %}">
+            <span class="tag">
+              {{ tag }}
+            </span>
+          </a>
+          {% endfor %}
+          
+      {% else %}
+      <p>还没有任何评论！</p>
+      {% endif %}
+        </div>
+        <!-- 文章标签 end -->
+         <!-- 日期归档 -->
+         {% get_month_list as archive_list %}
+         <div class="box is-shadowless2 is-radiusless">
+           <h1 class="title is-size-5">日期归档</h1>
+           {% if archive_list %}
+           {% for archive in archive_list %}
+           <article class="media" >
+               <div class="media-content" >
+                 <div class="content">
+                 
+                 <a href="{% url 'blog:dates' archive.year archive.month %}">{{ archive|date:"Y年m月" }}</a>  
+                 </div>
+               </div>
+             </article>
+           {% endfor %}
+       {% else %}
+       <p>还没有任何评论！</p>
+       {% endif %}
+         </div>
+         <!-- 日期归档 end -->
+ 
+        <!-- 侧边栏评论 -->
+        {% get_comment_list as comment_list %}
+        <div class="box is-shadowless2 is-radiusless">
+          <h1 class="title is-size-5" id="comment">最新评论</h1>
+          {% if comment_list %}
+              {% for comment in comment_list %}
+              <article class="media" style="padding-left: 1rem;">
+                  <div class="media-content" >
+                    <div class="content">
+                      <p>
+                        <span class="is-size-7 has-text-grey-light">
+                          <a href="">{{ comment.author }}</a> 于 {{ comment.add_date|date }}发表评论：</span><br>
+                         <a href="{% url 'blog:article' comment.article.id %}">{{ comment.content }}</a>
+                      </p>
+                      
+                    </div>
+                  </div>
+                </article>
+              {% endfor %}
+          {% else %}
+          <p>还没有任何评论！</p>
+          {% endif %}
+        </div>
+         <!-- 侧边栏评论 end-->
+
+
+
+          {% endblock aside %} 
+      </div>
+      <!-- 博客右侧列表模块 end-->
+
+
+    </div>
+  </section>
+
+
+</div>
+<!-- 博客content模块 end -->
+
+<!-- 回到顶部 -->
+<div class="leftNav-item">
+	<ul>
+		<!-- <li> -->
+    <li lay-data="img" data-fooc="{% static 'blog/images/qqmail.png' %}">
+			<i class="fa fa-location-arrow"></i>
+			<a href="javascript:void(0)" class="rota">邮箱反馈</a>
+		</li>
+		<!-- <li title="联系作者"> -->
+    <li lay-data="img" data-fooc="{% static 'blog/images/weixin.jpg' %}">
+			<i class="fa fa-comments-o"></i>
+			<a href="javascript:void(0)"class="rota">联系作者</a>
+		</li> 
+		<li lay-data="img" data-fooc="{% static 'blog/images/zhifu.jpg' %}">
+			<i class="fa fa-money"></i><a href="javascript:;" class="rota">小额打赏</a>
+		</li> 
+		<li title="返回顶部" class="for-top">
+			<i class="fa fa-arrow-up"></i>
+			<a href="javascript:;" class="rota">去顶部</a>
+		</li>
+	</ul>
+</div>
+
+<script src="{% static 'blog/js/jquery.min.js' %}"></script>
+<script src="{% static 'blog/js/nav.js' %}"></script>
+</div>
+</body>
+</html>

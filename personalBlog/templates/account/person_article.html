@@ -1,0 +1,75 @@
+{% extends 'account/person_center.html' %}
+{% load staticfiles %}
+
+{% block head %}
+    <title>{{ user.username }}已发布的文章</title>
+{% endblock head %}
+
+{% block person %}
+<div class="tabs">
+    <ul>
+        <li class="is-active"><a>已发布的文章</a></li>
+        <!-- <li><a>草稿箱</a></li> -->
+    </ul>
+</div>
+<div class="content">
+    <table class="table">
+        <thead>
+            <tr>
+                <th><abbr title="Position">序号</abbr></th>
+                <th>标题</th>
+                <th><abbr title="Played">发布日期</abbr></th>
+                <th>操作</th>
+            </tr>
+            <tbody>
+                {% if article_list %}    
+                {% for article in article_list %}
+                    <tr>
+                      <th>{{ forloop.counter }}</th>
+                      <td><a href="{% url 'blog:article' article.id %}" title="{{ article.title }}">{{ article.title }}</a> 
+                      </td>
+                      <td>{{ article.pub_date|date }}</td>
+                      <td>
+                        <a name="delete" href="javascript:" οnclick="del_article(this, {{ article.id }})"><span class="glyphicon glyphicon-trash" style="margin-left:8px;"></span></a>
+                    </td>
+
+                    </tr>
+                {% endfor %}
+                {% else %}
+                    <p>还没有发布任何文章。</p>
+                {% endif %}
+            </tbody>
+    </table>
+</div>
+
+{% endblock person %}
+<!-- <script type="text/javascript" src="{% static 'blog/js/jquery-3.4.1.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'account/js/layer.js' %}"></script>
+<script type="text/javascript">
+    function del_article(the, article_id){
+        var article_name = $(the).parents("tr").children("td").eq(1).text();
+        layer.open({
+            type: 1,
+            skin: "layui-layer-rim",
+            area: ["400px", "200px"],
+            title: "删除文章",
+            content: '<div class="text-center" style="margin-top:20px"><p>是否确定删除《'+article_name+'》</p> </div>',
+            btn:['确定', '取消'], yes: function(){
+                $.ajax({
+                    url: '{% url "article:del_article" %}',
+                    type:"POST",
+                    data: {"article_id":article_id},
+                    success: function(e){
+                        if(e=="1"){
+                            parent.location.reload();
+                            layer.msg("has been deleted.");
+                        }else{
+                            layer.msg("删除失败");
+                        }
+                    },
+                })
+            },
+        });
+    }
+ 
+</script> -->

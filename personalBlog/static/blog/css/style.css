@@ -1,0 +1,28 @@
+html{
+    background-color: aliceblue;
+}
+
+.menu-header{
+    height: 5em;
+}
+.menu-header .navbar{
+    min-height: 5em;
+    padding: 0 2em 0 0.8em;
+    background: white;
+    
+}
+.menu-header .navitem{
+    line-height: 5em;
+}
+    /* login */
+.login{
+    display: flex;
+    min-height: 100vh;
+    margin: 0;
+}
+.login .login-box{
+    margin:auto;
+}
+.logo{
+    width:50px;
+  }

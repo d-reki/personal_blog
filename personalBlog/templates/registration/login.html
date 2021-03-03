@@ -1,0 +1,41 @@
+{% load staticfiles %}
+{% load i18n static %}
+<html>
+<head>
+    <title>登录页</title>
+    <link rel="stylesheet" href="{% static 'account/css/loginstyle.css' %}">
+</head>
+<body>
+    <div class="video">
+        <video autoplay loop muted>
+            <source src="{% static 'account/video/ED.mp4' %}" type="video/mp4" />
+        </video> 
+    </div>
+    <div class="login-form">
+        <h1>用户登录</h1>
+        <p class="p1">未有帐号？<a href="{% url 'account:register' %}">前往注册</a></p>
+        <form action="" method="post" id="login-form">
+            {% csrf_token %}
+            <div class="form-input">
+                <label for="{{ form.username.id_for_label }}" class="label">{{ form.username.label }}</label>
+                <input class="input" type="text" name="{{ form.username.html_name }}" id="{{ form.username.id_for_label }}" placeholder="你的账号">
+                {{ form.username.errors }}
+            </div>
+            <div class="form-input">
+                <label for="{{ form.password.id_for_label }}" class="label">{{ form.password.label }}</label>
+                <input class="input" type="password" name="{{ form.password.html_name }}" id="{{ form.password.id_for_label }}" placeholder="你的密码">
+                {{ form.password.errors }}
+            </div>
+            <div class="loginbutton">
+                <input type="hidden" name="next" value="{% url 'account:person' %}">
+                <input type="submit" value="{% trans 'Log in' %}" />
+                <!-- <a href="{% url 'account:register' %}"><input type="button" value="{% trans '前往注册' %}" /></a> -->
+            </div>
+            {% url 'password_reset' as password_reset_url %}
+            {% if password_reset_url %}
+            <a href="{{ password_reset_url }}" class="forget">我忘了密码</a>
+            {% endif %}
+        </form>
+    </div>
+</body>
+</html>

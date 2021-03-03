@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+{% load staticfiles %}
+
+<html lang="cn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href=" {% static 'blog/css/bulma.css' %}">
+    <link rel="stylesheet" href="{% static 'blog/css/style.css' %}">
+    <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
+    <link rel="stylesheet" href="{% static 'blog/css/bootstrap.min.css' %}">
+    {% block head %}
+    <title>个人中心</title>
+    {% endblock head %}
+    
+</head>
+<body>
+    <header class="container menu-header">
+    <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+        　　<div class="container">　　<!-- container让导航条居中container-fluid让导航条自适应 -->　　
+        　　　　<div class="navbar-header">
+        　　　　　　 <!-- 代表响应式布局：当浏览器宽度小于某个值时导航栏折叠变成三道杠 -->
+                    <button class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" type="button">
+                        <span class="sr-only navbar-left">切换导航</span>
+                        <span class="icon-bar navbar-left"></span>
+                        <span class="icon-bar navbar-left"></span>
+                        <span class="icon-bar navbar-left"></span>
+                    </button>
+               <!-- //代表导航栏左侧logo或者图标  -->   
+        　　　　 　　<!-- <a class="navbar-brand" href="http://www.baidu.com">浏览器博物馆</a> -->
+                    <span class="navbar-brand">
+                      <a href="{% url 'blog:index' %}"><img class="logo2" src="{% static 'blog/images/logo.png' %}" /></a>
+                    </span>
+                </div>
+        　　　　<!-- //导航条内容，为了响应式布局，点击三道杠弹出导航栏 -->   
+                    <!-- <div id="navbarBasicExample" class="navbar-menu"> -->
+      
+                        <!-- <div class="navbar-end"> -->
+                          <div class="form-group2">
+              
+                              {% block user %}
+                              <div class="dropdown is-hoverable">
+                                  <div class="dropdown-trigger">
+                                  <button class="button is-white" style="height: 4rem" aria-haspopup="true" aria-controls="dropdown-menu2">
+                                      <figure class="image is-24x24">
+                                          <img class="is-rounded" src="{{ MEDIA_URL }}{{ user.userinfo.user_img }}">
+                                      </figure> &nbsp;&nbsp;
+                                      <span class="has-text-grey-dark">{{ user.username }}</span>
+                                      <span class="icon is-small">
+                                      <i class="fas fa-angle-down" aria-hidden="true"></i>
+                                      </span>
+                                  </button>
+                                  </div>
+                                  <div class="dropdown-menu" id="dropdown-menu2" role="menu" >
+                                  <div class="dropdown-content is-shadowless">
+                                      <div class="dropdown-item">
+                                      <a class=" has-text-grey-dark" href="">
+                                          <span class="icon is-small">
+                                              <i class="fas fa-user-cog" aria-hidden="true"></i>
+                                          </span>&nbsp;&nbsp;
+                                          账号设置
+                                      </a>
+                                      </div>
+                                      <hr class="dropdown-divider">
+                                      <div class="dropdown-item">
+                                          <a class=" has-text-grey-dark" href=" {% url 'logout' %}">
+                                              <span class="icon is-small">
+                                                  <i class="fas fa-power-off" aria-hidden="true"></i>
+                                              </span>&nbsp;&nbsp;
+                                              退出登录
+                                          </a>
+                                      </div>
+                                  </div>
+                                  </div>
+                              </div>
+                              {% endblock user %}
+                  
+                          <!-- </div> -->
+                        <!-- </div> -->
+                </div>
+            </div>
+        </nav>
+    </header>
+    <!-- 头部 -->
+    <!-- <nav class="navbar has-shadow" role="navigation" aria-label="main navigation" style="min-height: 4rem">
+    <div class="container">
+        <div class="navbar-brand">
+          <a class="navbar-item" href="{% url 'blog:index' %}">
+              <span style="font-size:30px;">首页11</span>
+          </a>      
+          <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+          </a>
+        </div>
+      
+
+    </div>
+    </nav> -->
+    <!-- 头部 end -->
+    <section class="section">
+        <div class="container">
+            {% block section %}
+            <div class="columns">
+                <div class="column is-2">
+                    <div class="card">
+                        <header class="card-header">
+                            <p class="card-header-title">个人中心</p>
+                            <a href="#" class="card-header-icon" aria-label="more options">
+                                <span class="icon">
+                                    <i class="fas fa-angle-down" aria-hidden="true"></i>
+                                </span>
+                            </a>
+                        </header>
+                        <div class="card-content menu">
+                            <ul class="content menu-list">
+                                <li><a href="{% url 'account:person' %}">个人信息</a></li>
+                                <li><a href="{% url 'password_change' %}">修改密码</a></li>
+                                <!-- <li><a href="{% url 'password_reset' %}">找回密码</a></li> -->
+                            </ul>
+                        </div>
+                           
+                    </div>
+                    <div class="card">
+                            <header class="card-header">
+                                <p class="card-header-title">内容管理</p>
+                                <a href="#" class="card-header-icon" aria-label="more options">
+                                    <span class="icon">
+                                        <i class="fas fa-angle-down" aria-hidden="true"></i>
+                                    </span>
+                                </a>
+                            </header>
+                            <div class="card-content menu">
+                                <ul class="content menu-list">
+                                    <li><a href="{% url 'account:person_add_article' %}">添加文章</a></li>
+                                    <li><a href="{% url 'account:person_article' %}">已发布</a></li>
+                                    <li><a href="#">评论管理</a></li>
+                                </ul>
+                            </div>
+                               
+                    </div>
+                </div>
+                <div class="column is-9">
+                    <div class="box is-radiusless is-shadowless2">
+                        {% block person %}
+                        <div class="tabs">
+                            <ul>
+                              <li class="is-active"><a>账号信息</a></li>
+                            </ul>
+                        </div>
+
+
+                    <div class="columns is-mobile" style="border-bottom: #ededed solid 1px; padding-bottom: 1rem">
+                        <div class="column is-narrow">
+                            <figure class="image is-96x96">
+                                <img class="is-rounded" src="{{ MEDIA_URL }}{{ user.userinfo.user_img }}">
+                            </figure>
+                        </div>
+                        <div class="column is-narrow">
+                            <div style="padding-top: 1.5rem;">
+                                <h1 class="title is-size-4">{{ user.username }}</h1>
+                                <p class="subtitle is-size-6">{{ user.userinfo.user_desc }}</p>
+                            </div>
+                        </div>
+                        <div class="column is-narrow-mobile">
+                            <a class=" button is-light is-pulled-right" href="{% url 'account:edit_user' %}" style="margin-top: 1.8rem">修改信息</a>
+                        </div>
+                    </div>    
+                    
+                    <div class="columns" style="padding:1rem 0; ">
+                        <div class="column is-2">
+                            <p>个人信息</p>  
+                        </div>
+                        <div class="column">
+                            <div class="columns is-mobile" style="border-bottom: #ededed solid 1px">
+                                <div class="column is-2">
+                                   <span class=" has-text-grey-light">用户类型</span> 
+                                </div>
+                                    <div class="column is-narrow">
+                                        <span class=" has-text-black-ter">{{ user.userinfo.get_user_type_display }}</span>
+                                    </div>
+                                <div class="column has-text-right">
+                                    <!-- <a href="">更改类型</a> -->
+                                </div>
+                                        
+                            </div>
+                            <div class="columns is-mobile" style="border-bottom: #ededed solid 1px">
+                                <div class="column is-2">
+                                   <span class=" has-text-grey-light">手机</span> 
+                                </div>
+                                <div class="column is-narrow">
+                                    <span class=" has-text-black-ter">{{ user.userinfo.phone }}</span>
+                                </div>
+                                <!-- <div class="column"></div> -->
+                                
+                            </div>
+                            <div class="columns is-mobile" style="border-bottom: #ededed solid 1px">
+                                <div class="column is-2">
+                                   <span class=" has-text-grey-light">邮箱</span> 
+                                </div>
+                                <div class="column is-narrow">
+                                    <span class=" has-text-black-ter">{{ user.email }}</span>
+                                </div>
+                                <!-- <div class="column"></div> -->
+                                    
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="columns" style="padding:1rem 0; ">
+                        <div class="column is-2">
+                            <p>个人简介</p>  
+                        </div>
+                        <div class="column">
+                            <div class="content">
+                                {{ user.userinfo.user_content }}
+                            </div>
+                        </div>
+                    </div>
+                   
+                    {% endblock person %}
+                    </div>
+                </div>
+            </div>
+            {% endblock section %}
+        </div>
+    </section>
+
+</body>
+</html>

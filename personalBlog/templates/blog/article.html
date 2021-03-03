@@ -1,0 +1,121 @@
+{% extends 'blog/base.html' %}
+{% load staticfiles %}
+{% block head %}
+   <title>{{ article }}</title>
+   <link rel="stylesheet" href="{% static 'blog/css/article.css' %}">
+{% endblock head %}
+
+{% block content %}
+
+<div class="box is-shadowless is-radiusless">
+  <div class=" is-pulled-right">
+    <div class="tags has-addons">
+        <span class="tag">本篇共</span>
+        <span class="tag is-primary">{{ content_count }} 字</span><br>
+       
+    </div>
+    
+  </div>
+    <h1 class=" is-size-5 has-text-weight-bold"><a href="">{{ article.title }}</a> </h1> 
+    <p class="has-text-grey-light is-size-7" style="margin:1em 0;">
+      <span>作者：<a href="">{{ article.author }}</a> </span>&nbsp;
+      <span>分类：<a href="{% url 'blog:category' article.category.slug %}" target="_blank" rel="noopener noreferrer">{{ article.category }}</a> </span>&nbsp;
+      <span>发布时间：{{ article.add_date|date }} </span>
+    </p>
+    <div class="content">
+      <blockquote class=" is-size-7" style="margin-bottom:1em ">{{ article.desc }}</blockquote>
+      <div class=" has-text-justified">
+        {{ article.content|safe }}
+      </div>
+      <!-- <div class="has-text-right">
+          <p class=" is-size-7 has-text-grey-light">
+            本篇文章最后修改于：{{ article.pub_date|date }}
+          </p>
+      </div> -->
+    </div> 
+
+<!-- 文章标签 -->
+    <div class="tags">
+    {% if article.tags.all %}
+      <span class="tag is-white has-text-black-ter is-paddingless">文章标签：</span>
+      {% for tag in article.tags.all %}
+        <span class="tag is-white is-paddingless">
+          <a href="{% url 'blog:article' article.id %}">{{ tag }}</a>  
+        </span>
+      {% endfor %}
+    {% else %}
+        <p>无标签！</p>
+    {% endif %}
+    </div>
+<!-- 文章标签 end-->
+</div>
+
+<!-- 上下篇 -->
+<div class="box is-shadowless is-radiusless">
+  <div class="columns">
+    <div class="column is-6">
+      {% if per_article %}
+        <span class=" is-size-7">上一篇：</span>
+        <a href="{% url 'blog:article' per_article.id %}">{{ per_article }}</a> 
+        {% else %}
+        <span class=" is-size-7">上一篇：</span>
+        <span class=" has-text-danger">没有了！</span> 
+      {% endif %}  
+    </div>
+    <div class="column is-6 has-text-right">
+        {% if next_article %}
+        <span class=" is-size-7">下一篇：</span>
+        <a href="{% url 'blog:article' next_article.id %}">{{ next_article }}</a>  
+        {% else %}
+        <span class=" is-size-7">下一篇：</span>
+        <span class=" has-text-danger">没有了！</span> 
+      {% endif %}
+    </div>
+  </div>
+</div>
+  <!-- 上下篇 end-->
+
+
+<!-- 留言内容 -->
+<div class="box is-shadowless is-radiusless">
+    <div class="tags has-addons is-pulled-right">
+        <span class="tag">本篇共</span>
+        <span class="tag is-primary">{{ article.comment_set.count }} 条评论</span><br>   
+    </div>
+  <h1 class="title is-size-5" id="comment">留言内容:</h1>
+  {% if article.comment_set.all %}
+    {% for comment in article.comment_set.all %}
+  <article class="media" style="padding-left: 1em">
+    <div class="media-content">
+      <div class="content">
+        <p>
+          <span class="is-size-7 has-text-grey-light">
+            <a href="">{{ comment.author }}</a> 于 {{ comment.add_date|date }}发表评论：</span><br>
+           {{ comment.content }}
+        </p>
+        
+      </div>
+    </div>
+  </article>
+  {% endfor %} 
+  {% else %}
+    <p>还没有任何评论！</p>
+  {% endif %}
+</div>
+<!-- 留言内容 end-->
+
+<!-- 留言框 -->
+<div class="box is-shadowless is-radiusless">
+  {% if user.is_authenticated %}
+    <form action="" method="post">
+      {% csrf_token %}
+      {{ form.as_p }}
+      <input class="button is-primary is-pulled-right" style="margin-top: 1em" type="submit" value="提交评论">
+      <div class=" is-clearfix"></div>
+    </form>
+  {% else %}
+    <p>你还没有登录，请 <a href="{% url 'login' %}">登录</a> 后再评论！还没有账号，请前往<a href="{% url 'account:register' %}"> 注册 </a>！</p>
+  {% endif %}
+</div>
+<!-- 留言框 end -->
+{% endblock content %}  

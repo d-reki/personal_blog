@@ -1,0 +1,31 @@
+{% load staticfiles %}
+{% load i18n static %}
+<html>
+<head>
+    <title>注册页</title>
+    <link rel="stylesheet" href="{% static 'account/css/registerstyle.css' %}">
+</head>
+<body>
+    <div class="video">
+        <video autoplay loop muted>
+            <source src="{% static 'account/video/ED.mp4' %}" type="video/mp4" />
+        </video> 
+    </div>
+    <div class="login-form">
+        <h1>欢迎注册</h1>
+        <p class="p1">已有帐号？<a href="{% url 'login' %}">登录</a></p>
+        <form action="" method="post" id="login-form">
+            <input type="hidden" name="next" value="{% url 'login' %}">
+            {% csrf_token %}
+            <div class="form-input">
+                {{ form.as_p}}
+                {{ user_info_form.as_p }}
+            </div>
+
+            <div class="loginbutton">
+                <input type="submit" value="{% trans '注册' %}" />
+            </div>
+        </form>
+    </div>
+</body>
+</html>

@@ -1,0 +1,68 @@
+{% extends 'account/person_center.html' %}
+{% load staticfiles %}
+
+{% block head %}
+    <title>{{ user.username }}已发布的文章</title>
+    <style>
+    .ck-content{
+        height: 20em;
+    }
+    </style>
+{% endblock head %}
+
+{% block person %}
+<div class="tabs">
+    <ul>
+        <li class="is-active"><a>已发布的文章</a></li>
+        <!-- <li><a>草稿箱</a></li> -->
+    </ul>
+</div>
+<div class="content">
+    <form action="{% url 'account:person_add_article' %}" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+       
+       <div class="field">
+            <label class="label" for="{{ form.category.id_for_label }}">{{ form.category.label }}</label>
+            <div class="select">
+                {{ form.category }}
+            </div>
+        </div>
+      <div class="field">
+            <label class="label" for="{{ form.title.id_for_label }}">{{ form.title.label }}</label>
+            <div class="control">
+                {{ form.title }}
+            </div>
+      </div>
+     
+        <div class="field">
+            <label class="label" for="{{ form.desc.id_for_label }}">{{ form.desc.label }}</label>
+            <div class="control">
+               {{ form.desc }}
+            </div>
+        </div>
+        <div class="field">
+            <label class="label" for="{{ form.conetnt.id_for_label }}">{{ form.content.label }}</label>
+            <div class="control">
+               <!-- {{ form.content }} -->
+               <!-- 集成ckeditor5 -->
+               <!-- <textarea name="content" style="height: 5em"  id="id_content" >
+                    <p>替换这句话为你的内容即可！</p>
+               </textarea> -->
+               <!-- 集成kindeditor -->
+               <textarea name="content" id="id_content" ></textarea>
+
+            </div>
+        </div>
+        <div class="field">
+            <label class="label" for="{{ form.tags.id_for_label }}">{{ form.tags.label }}</label>
+            <div class="select is-multiple">
+                {{ form.tags }}
+            </div>
+        </div>
+        <input class=" button is-primary is-pulled-right" type="submit" value="发布">
+        <div class=" is-clearfix"></div>
+        {{ form.media }}
+    </form>
+</div>
+
+{% endblock person %}

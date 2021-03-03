@@ -1,0 +1,41 @@
+{% extends 'blog/base.html' %}
+{% block head %}
+   <title>标签{{ tag }}下的文章</title>
+{% endblock head %}
+
+{% block content %}
+
+<!-- 显示当前分类模块 -->
+<div class="box is-shadowless is-radiusless">
+    标签：{{ tag }}
+    <div class="tags has-addons is-pulled-right">
+      <span class="tag">共</span>
+      <span class="tag is-primary">{{ tag.article_set.count }} 篇</span>
+    </div>
+</div>
+<!-- 显示当前分类模块 end-->
+
+
+{% if tag.article_set.all %}
+{% for article in tag.article_set.all %}
+<div class="box is-shadowless is-radiusless">
+    <h1 class=" is-size-5 has-text-weight-bold"><a href="{% url 'blog:article' article.id %}">{{ article.title }}</a> </h1> 
+    <p class="has-text-grey-light is-size-7" style="margin:1em 0;">
+      <span>作者：<a href="">{{ article.author }}</a> </span>&nbsp;
+      <span>分类：<a href="{% url 'blog:category' article.category.slug %}" target="_blank" rel="noopener noreferrer">{{ article.category }}</a> </span>&nbsp;
+      <span>发布时间：{{ article.add_date }} </span>
+    </p>
+    <div class="content">
+      {{ article.desc }}...
+
+      <a href="{% url 'blog:article' article.id %}" class="button is-pulled-right is-primary" style="margin-top: 1em">阅读更多</a>
+      <div class=" is-clearfix"></div>
+    </div> 
+</div>
+{% endfor %}
+{% else %}
+    <p>还没有发布任何文章！</p>
+{% endif %}
+
+{% endblock content %}
+

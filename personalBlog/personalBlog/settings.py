@@ -11,16 +11,15 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 """
 
 import os
-
+import json
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
-
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'zr@+j8j^39&17=dwaf=6=8s@@5hkl#1l^d08=w6z9zvh)lx*8m'
+# 敏感信息存取或者使用django dotenv管理
+with open('env.json') as env:
+    ENV = json.load(env)
+SECRET_KEY = ENV['SECRET_KEY']
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -31,6 +30,7 @@ ALLOWED_HOSTS = ['*']
 # Application definition
 
 INSTALLED_APPS = [
+    'simpleui',
     'django.contrib.admin',       # 管理员站点， 你很快就会使用它。
     'django.contrib.auth',        # 认证授权系统
     'django.contrib.contenttypes',  # 内容类型框架。
@@ -136,14 +136,16 @@ USE_TZ = False
 STATIC_URL = '/static/'
 
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, "static"),
+    os.path.join(BASE_DIR, 'static'),
 ]
-
+# STATIC_ROOT = os.path.join(BASE_DIR,'static')
 # media_confige
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 
+SIMPLEUI_HOME_INFO = False #隐藏版本信息
+SIMPLEUI_STATIC_OFFLINE = True # simpleui离线使用 
 # 加入下面的配置
 # STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
@@ -161,12 +163,21 @@ CACHES = {
     }
 }
 
-## 邮箱验证测试
-EMAIL_HOST = 'smtp.163.com' 
-EMAIL_HOST_USER = "m15159788455@163.com" 
-EMAIL_HOST_PASSWORD = "" 
-EMAIL_PORT = 25
-EMAIL_USE_TLS = True
-DEFAULT_FROM_EMAIL = "m15159788455@163.com"
 
-# APPEND_SLASH = False
+# qq IMAP/SMTP 配置
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.qq.com' # SMTP服务器,QQ邮箱需要开启SMTP服务。
+EMAIL_PORT = 25 # 发送邮件的端口
+# 邮箱名
+EMAIL_HOST_USER = '758576159@qq.com'
+# 邮箱密码，如果是QQ邮箱，填写的不是密码，是授权码
+# EMAIL_HOST_PASSWORD = ''
+EMAIL_HOST_PASSWORD = ENV['EMAIL_HOST_PASSWORD']
+EMAIL_USE_TLS  = True # 是否使用TLS
+# 邮件标题前缀
+EMAIL_SUBJECT_PREFIX = 'Django-'
+# 默认发送人
+DEFAULT_FROM_EMAIL = SERVER_EMAIL = EMAIL_HOST_USER
+
+# 管理员邮箱(可多个,获取日志错误)
+ADMINS = [('ding', 'mabi290595618@qq.com')]

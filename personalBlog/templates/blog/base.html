@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-{% load staticfiles %}
+{% load static %}
 {% load simple_tag %}
 <html lang="en">
 <head>
@@ -51,8 +51,15 @@
                   <form class="navbar-form navbar-left" role="search" action="{% url 'blog:search' %}">
                     {% csrf_token %}
                  <div class="form-group">
-                    <input type="text" class="form-control" placeholder="搜索文章">
-                    <button type="submit" class="btn btn-default">搜索</button>
+                  <form class="form-inline" >
+                    <label class="sr-only">content</label>
+                    <input type="text" 
+                        class="form-control mb-2 mr-sm-2" 
+                        name="search" 
+                        placeholder="搜索文章..." 
+                        required
+                    >
+                </form>
                  </div>
                  
                </form>

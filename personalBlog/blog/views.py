@@ -4,8 +4,7 @@ from django.core.cache import cache, caches  # 缓存框架
 # Create your views here.
 from .models import Category, Article, Tags, Comment       # 引入菜单模型类 
 from .forms import CommentForm
-
-
+from django.db.models import Q
 def index(request):
     """首页函数，把首页想要显示的内容都在这里查询"""
     article_list = Article.objects.all()    # 查询到文章的所有数据，显示到首页
@@ -61,14 +60,13 @@ def blog_get_tags(request, tag_id):
     return render(request, 'blog/tags.html', locals())
 
 def search(request):
-    q = request.GET.get('q')
-    error_msg = ''
- 
-    if not q:
-        error_msg = '请输入关键词'
-        return render(request, 'blog/index.html', {'error_msg': error_msg})
- 
-    post_list = Post.objects.filter(title__icontains=q)
-    return render(request, 'blog/index.html', {'error_msg': error_msg,
-                                               'post_list': post_list})
+    search = request.GET.get('search')
+    if search is not None:
+        article_list = Article.objects.filter(Q(title__icontains=search) or Q(body__icontains=search))
+    else:
+        search = ''
+        article_list = ArticlePost.objects.all()
+    print('111',article_list)
+    context = {'article_list':article_list}  # 定义上下文
+    return render(request, 'blog/index.html', context)
 
